@@ -127,7 +127,7 @@ static int lima_pp_group_init(struct lima_device *dev, int n)
 {
 	int err, i;
 	struct lima_pp *pp;
-	char *pp_name = "pp0", *pp_mmu_name = "pp0-mmu";
+	char pp_name[] = "pp0", pp_mmu_name[] = "pp0-mmu";
 
 	pp = kzalloc(sizeof(*pp), GFP_KERNEL);
 	if (!pp)
@@ -176,9 +176,10 @@ int lima_device_init(struct lima_device *ldev, struct drm_device *dev)
 	int err;
 	struct device_node *np;
 	u32 num_pp;
+	struct platform_device *pdev = to_platform_device(dev->dev);
 
-	ldev->pdev = dev->platformdev;
-	ldev->dev = &dev->platformdev->dev;
+	ldev->pdev = pdev;
+	ldev->dev = &pdev->dev;
 	ldev->ddev = dev;
 
 	dma_set_coherent_mask(ldev->dev, DMA_BIT_MASK(32));
