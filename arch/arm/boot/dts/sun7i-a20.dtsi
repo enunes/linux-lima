@@ -719,6 +719,15 @@
 			clock-output-names = "codec";
 		};
 
+		mali400_clk: clk@01c20154 {
+			#clock-cells = <0>;
+			#reset-cells = <0>;
+			compatible = "allwinner,sun4i-a10-mali400-clk";
+			reg = <0x01c20154 0x4>;
+			clocks = <&pll3>, <&pll4>, <&pll5 1>, <&pll7>, <&pll8>;
+			clock-output-names = "mali400";
+		};
+
 		mbus_clk: clk@01c2015c {
 			#clock-cells = <0>;
 			compatible = "allwinner,sun5i-a13-mbus-clk";
@@ -856,6 +865,34 @@
 			status = "disabled";
 			#address-cells = <1>;
 			#size-cells = <0>;
+		};
+
+		gpu: gpu@01c40000 {
+			compatible = "arm,mali400";
+			reg = <0x01c40000 0x1000
+			       0x01c41000 0x1000
+			       0x01c42000 0x1000
+			       0x01c43000 0x1000
+			       0x01c44000 0x1000
+			       0x01c45000 0x1000
+			       0x01c48000 0x2000
+			       0x01c4a000 0x2000>;
+			reg-names = "gp", "l2-cache", "pmu", "gp-mmu", "pp0-mmu",
+				    "pp1-mmu", "pp0", "pp1";
+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+					   <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gp", "gp-mmu", "pp0", "pp0-mmu", "pmu",
+					  "pp1", "pp1-mmu";
+			clocks = <&ahb_gates 52>, <&mali400_clk>;
+			clock-names = "bus", "gpu";
+			resets = <&mali400_clk>;
+			reset-names = "ahb";
+			num-pp = <2>;
 		};
 
 		spi0: spi@01c05000 {
