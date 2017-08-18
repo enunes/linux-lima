@@ -109,7 +109,7 @@ static int sun4i_a10_display_reset_xlate(struct reset_controller_dev *rcdev,
 static void __init sun4i_a10_display_init(struct device_node *node,
 					  const struct sun4i_a10_display_clk_data *data)
 {
-	const char *parents[4];
+	const char *parents[5];
 	const char *clk_name = node->name;
 	struct reset_data *reset_data;
 	struct clk_divider *div = NULL;
@@ -262,3 +262,22 @@ static void __init sun4i_a10_display_setup(struct device_node *node)
 }
 CLK_OF_DECLARE(sun4i_a10_display, "allwinner,sun4i-a10-display-clk",
 	       sun4i_a10_display_setup);
+
+static const struct sun4i_a10_display_clk_data sun4i_a10_mali400_data __initconst = {
+	.has_div	= true,
+	.num_rst	= 1,
+	.parents	= 5,
+	.offset_en	= 31,
+	.offset_rst	= 30,
+	.offset_mux	= 24,
+	.offset_div	= 0,
+	.width_mux	= 3,
+	.width_div	= 4,
+};
+
+static void __init sun4i_a10_mali400_setup(struct device_node *node)
+{
+	sun4i_a10_display_init(node, &sun4i_a10_mali400_data);
+}
+CLK_OF_DECLARE(sun4i_a10_mali400, "allwinner,sun4i-a10-mali400-clk",
+	       sun4i_a10_mali400_setup);
